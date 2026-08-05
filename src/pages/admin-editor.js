@@ -76,17 +76,43 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
 
       <div class="admin-editor">
         <div class="admin-editor-main">
+          <!-- Categoría -->
+          <div class="admin-field" style="position: relative; z-index: 10;">
+            <label>Categoría</label>
+            <div class="category-combobox" id="category-combobox">
+              <input
+                type="text"
+                class="category-combobox-input"
+                id="category-input"
+                placeholder="Buscar o crear categoría..."
+                value="${selectedCategoryLabel}"
+                autocomplete="off"
+              />
+              <input type="hidden" id="category-slug" value="${selectedCategory}" />
+              <div class="category-combobox-dropdown" id="category-dropdown"></div>
+            </div>
+          </div>
+
+          <!-- Volanta / Subtítulo -->
+          <div class="admin-field">
+            <label for="editor-subtitle">Volanta (texto arriba del título)</label>
+            <input type="text" id="editor-subtitle" placeholder="Breve texto para categorizar (ej: Política regional)" value="${(article?.subtitle || '').replace(/"/g, '&quot;')}" />
+          </div>
+
+          <!-- Título -->
           <div class="admin-field">
             <label for="editor-title">Título</label>
-            <input type="text" id="editor-title" placeholder="Título de la noticia" value="${(article?.title || '').replace(/"/g, '&quot;')}" />
+            <input type="text" id="editor-title" placeholder="Título principal de la noticia" value="${(article?.title || '').replace(/"/g, '&quot;')}" />
           </div>
 
+          <!-- Excerpt -->
           <div class="admin-field">
-            <label for="editor-subtitle">Subtítulo / Volanta</label>
-            <input type="text" id="editor-subtitle" placeholder="Breve subtítulo (ej: Política regional)" value="${(article?.subtitle || '').replace(/"/g, '&quot;')}" />
+            <label for="editor-excerpt">Resumen (aparecerá debajo del título como subtítulo principal)</label>
+            <textarea id="editor-excerpt" placeholder="Resumen breve para el listado y debajo del título." rows="3">${article?.excerpt || ''}</textarea>
           </div>
 
-          <div class="admin-field">
+          <!-- Contenido -->
+          <div class="admin-field" style="z-index: 1;">
             <label>Contenido</label>
             <div id="editor-quill"></div>
           </div>
@@ -106,22 +132,6 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
             </div>
           </div>
 
-          <!-- Category Panel -->
-          <div class="admin-editor-panel">
-            <h3>Categoría</h3>
-            <div class="category-combobox" id="category-combobox">
-              <input
-                type="text"
-                class="category-combobox-input"
-                id="category-input"
-                placeholder="Buscar o crear categoría..."
-                value="${selectedCategoryLabel}"
-                autocomplete="off"
-              />
-              <input type="hidden" id="category-slug" value="${selectedCategory}" />
-              <div class="category-combobox-dropdown" id="category-dropdown"></div>
-            </div>
-          </div>
 
           <!-- Author Panel -->
           <div class="admin-editor-panel">
@@ -142,13 +152,6 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
             </div>
           </div>
 
-          <!-- Excerpt Panel -->
-          <div class="admin-editor-panel">
-            <h3>Resumen</h3>
-            <div class="admin-field" style="margin-bottom: 0;">
-              <textarea id="editor-excerpt" placeholder="Resumen breve para el listado de noticias (se auto-genera si lo dejás vacío)." rows="3">${article?.excerpt || ''}</textarea>
-            </div>
-          </div>
         </div>
       </div>
     </div>
