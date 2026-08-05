@@ -13,7 +13,7 @@ export function renderNewsCard(article, index = 0) {
             alt="${article.title}"
             loading="lazy"
           />
-          <span class="news-card-badge ${getCategoryClass(article.category)}">${article.categoryLabel}</span>
+          <span class="news-card-badge ${getCategoryClass(article.category)}">${article.category_label || article.category}</span>
         </div>
         <div class="news-card-body">
           <span class="news-card-subtitle">${article.subtitle}</span>
@@ -21,7 +21,7 @@ export function renderNewsCard(article, index = 0) {
           <p class="news-card-excerpt">${article.excerpt}</p>
           <div class="news-card-meta">
             ${icons.clock}
-            <span>${formatDate(article.date)}</span>
+            <span>${formatDate(article.created_at?.split('T')[0] || article.date || '')}</span>
             <span>·</span>
             <span>${article.author}</span>
           </div>
@@ -52,13 +52,13 @@ export function renderFeaturedGrid(articles) {
           <div class="featured-main-overlay"></div>
           <div class="featured-main-content">
             <span class="featured-badge" style="background: ${getCategoryColor(main.category)}">
-              ${main.categoryLabel}
+              ${main.category_label || main.category}
             </span>
-            <p class="featured-main-subtitle">${main.subtitle}</p>
+            <p class="featured-main-subtitle">${main.subtitle || ''}</p>
             <h2 class="featured-main-title">${main.title}</h2>
             <div class="featured-meta">
               ${icons.clock}
-              <span>${formatDate(main.date)}</span>
+              <span>${formatDate(main.created_at?.split('T')[0] || main.date || '')}</span>
             </div>
           </div>
         </a>
@@ -73,12 +73,12 @@ export function renderFeaturedGrid(articles) {
               <div class="featured-secondary-overlay"></div>
               <div class="featured-secondary-content">
                 <span class="featured-badge" style="background: ${getCategoryColor(article.category)}">
-                  ${article.categoryLabel}
+                  ${article.category_label || article.category}
                 </span>
                 <h3 class="featured-secondary-title">${article.title}</h3>
                 <div class="featured-meta">
                   ${icons.clock}
-                  <span>${formatDate(article.date)}</span>
+                  <span>${formatDate(article.created_at?.split('T')[0] || article.date || '')}</span>
                 </div>
               </div>
             </a>

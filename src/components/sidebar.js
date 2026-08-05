@@ -1,10 +1,13 @@
 import { formatDate, getCategoryColor, icons } from '../utils.js';
-import newsData from '../data/news.js';
+import { getArticles } from '../data/news.js';
 
 /**
- * Render the sidebar
+ * Render the sidebar (async — fetches recent news from Supabase)
  */
-export function renderSidebar() {
+export async function renderSidebar() {
+  const newsData = await getArticles();
+  const recentHtml = renderRecentNews(newsData);
+
   return `
     <aside class="sidebar" id="sidebar">
       <!-- Weather Widget -->
@@ -26,8 +29,8 @@ export function renderSidebar() {
         </div>
       </div>
 
-      <!-- Ad Space -->
-      <div class="ad-space ad-space-sidebar" id="ad-sidebar">
+      <!-- Promo Space -->
+      <div class="promo-space promo-space-sidebar" id="promo-sidebar">
         <div class="ad-placeholder">
           ${icons.ad}
           <span>Espacio publicitario</span>
@@ -42,7 +45,7 @@ export function renderSidebar() {
         </div>
         <div class="widget-body">
           <div class="recent-news-list">
-            ${renderRecentNews()}
+            ${recentHtml}
           </div>
         </div>
       </div>
@@ -53,7 +56,11 @@ export function renderSidebar() {
 /**
  * Render recent news for sidebar
  */
-function renderRecentNews() {
+function renderRecentNews(newsData) {
+  if (!newsData || newsData.length === 0) {
+    return '<p style="color: var(--color-text-muted); font-size: var(--text-sm);">No hay noticias recientes.</p>';
+  }
+
   return newsData
     .slice(0, 5)
     .map(article => `
@@ -62,9 +69,9 @@ function renderRecentNews() {
           <img src="${article.image}" alt="${article.title}" loading="lazy" />
         </div>
         <div class="recent-news-info">
-          <span class="recent-news-cat" style="color: ${getCategoryColor(article.category)}">${article.categoryLabel}</span>
+          <span class="recent-news-cat" style="color: ${getCategoryColor(article.category)}">${article.category_label || article.category}</span>
           <span class="recent-news-title">${article.title}</span>
-          <span class="recent-news-date">${formatDate(article.date)}</span>
+          <span class="recent-news-date">${formatDate(article.created_at?.split('T')[0] || article.date || '')}</span>
         </div>
       </a>
     `)

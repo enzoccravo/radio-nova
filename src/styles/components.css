@@ -5,7 +5,7 @@
 /* --- News Card --- */
 .news-card {
   background: var(--color-surface);
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   overflow: hidden;
   border: 1px solid var(--color-border);
   transition: all var(--transition-base);
@@ -129,7 +129,7 @@
 /* Main featured card */
 .featured-main {
   position: relative;
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -228,7 +228,7 @@
 
 .featured-secondary-card {
   position: relative;
-  border-radius: var(--radius-xl);
+  border-radius: 0;
   overflow: hidden;
   display: flex;
   align-items: flex-end;
@@ -282,8 +282,8 @@
   overflow: hidden;
 }
 
-/* --- Ad Space --- */
-.ad-space {
+/* --- Promo Space (renamed from ad-space to avoid AdBlockers) --- */
+.promo-space {
   background: var(--color-surface);
   border-radius: var(--radius-xl);
   border: 1px solid var(--color-border);
@@ -294,15 +294,19 @@
   position: relative;
 }
 
-.ad-space-horizontal {
+.promo-space-horizontal {
   width: 100%;
   min-height: 100px;
   margin-bottom: var(--space-8);
 }
 
-.ad-space-sidebar {
+.promo-space-sidebar {
   width: 100%;
   min-height: 250px;
+}
+
+.promo-space-vertical {
+  width: 100%;
 }
 
 .ad-placeholder {

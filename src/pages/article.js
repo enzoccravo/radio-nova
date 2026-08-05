@@ -1,11 +1,20 @@
-import newsData from '../data/news.js';
+import { getArticleBySlug, getArticlesByCategory } from '../data/news.js';
 import { formatDate, getCategoryClass, getCategoryColor, icons } from '../utils.js';
 
 /**
  * Render the article page
  */
-export function renderArticlePage(contentEl, params) {
-  const article = newsData.find(n => n.slug === params.slug);
+export async function renderArticlePage(contentEl, params) {
+  // Show loading
+  contentEl.innerHTML = `
+    <main class="main-content">
+      <div class="container">
+        <p style="color: var(--color-text-muted); padding: var(--space-8) 0;">Cargando nota...</p>
+      </div>
+    </main>
+  `;
+
+  const article = await getArticleBySlug(params.slug);
 
   if (!article) {
     contentEl.innerHTML = `
@@ -27,15 +36,23 @@ export function renderArticlePage(contentEl, params) {
     return;
   }
 
-  // Build paragraphs from body
-  const bodyHtml = article.body
-    .split('\n\n')
-    .map(p => `<p>${p.trim()}</p>`)
-    .join('');
+  // Build body HTML — handle both HTML (from Quill) and plain text (legacy)
+  let bodyHtml;
+  if (article.body.includes('<')) {
+    // Already HTML from Quill editor
+    bodyHtml = article.body;
+  } else {
+    // Legacy plain text format
+    bodyHtml = article.body
+      .split('\n\n')
+      .map(p => `<p>${p.trim()}</p>`)
+      .join('');
+  }
 
   // Get related articles (same category, different article)
-  const related = newsData
-    .filter(n => n.category === article.category && n.id !== article.id)
+  const categoryArticles = await getArticlesByCategory(article.category);
+  const related = categoryArticles
+    .filter(n => n.id !== article.id)
     .slice(0, 3);
 
   contentEl.innerHTML = `
@@ -51,21 +68,23 @@ export function renderArticlePage(contentEl, params) {
 
               <header class="article-header">
                 <span class="article-category ${getCategoryClass(article.category)}" style="background: ${getCategoryColor(article.category)}">
-                  ${article.categoryLabel}
+                  ${article.category_label || article.category}
                 </span>
-                <p class="article-subtitle">${article.subtitle}</p>
                 <h1 class="article-title">${article.title}</h1>
+                <p class="article-subtitle">${article.excerpt || article.subtitle || ''}</p>
                 <div class="article-meta">
                   ${icons.clock}
-                  <span>${formatDate(article.date)}</span>
+                  <span>${formatDate(article.created_at?.split('T')[0] || article.date || '')}</span>
                   <span>·</span>
                   <span>${article.author}</span>
                 </div>
               </header>
 
-              <div class="article-image">
-                <img src="${article.image}" alt="${article.title}" />
-              </div>
+              ${article.image ? `
+                <div class="article-image">
+                  <img src="${article.image}" alt="${article.title}" />
+                </div>
+              ` : ''}
 
               <div class="article-body">
                 ${bodyHtml}
@@ -100,9 +119,9 @@ export function renderArticlePage(contentEl, params) {
                         <img src="${r.image}" alt="${r.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
                       </div>
                       <div class="recent-news-info">
-                        <span class="recent-news-cat" style="color: ${getCategoryColor(r.category)}">${r.categoryLabel}</span>
+                        <span class="recent-news-cat" style="color: ${getCategoryColor(r.category)}">${r.category_label || r.category}</span>
                         <span class="recent-news-title" style="-webkit-line-clamp: 3;">${r.title}</span>
-                        <span class="recent-news-date">${formatDate(r.date)}</span>
+                        <span class="recent-news-date">${formatDate(r.created_at?.split('T')[0] || r.date || '')}</span>
                       </div>
                     </a>
                   `).join('')}
@@ -112,7 +131,7 @@ export function renderArticlePage(contentEl, params) {
           </div>
 
           <aside class="sidebar" style="position: sticky; top: calc(var(--header-height) + var(--player-height) + 2rem); height: max-content;">
-            <div class="ad-space ad-space-vertical" style="height: 600px;">
+            <div class="promo-space promo-space-vertical" style="height: 600px;">
               <div class="ad-placeholder">
                 ${icons.ad}
                 <span>Espacio publicitario</span>

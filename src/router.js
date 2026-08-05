@@ -24,7 +24,7 @@ export class Router {
     this.resolve();
   }
 
-  resolve() {
+  async resolve() {
     const path = window.location.pathname;
 
     // Try to match routes
@@ -50,9 +50,15 @@ export class Router {
     // Scroll to top
     window.scrollTo({ top: 0, behavior: 'instant' });
 
+    // Run guard if present
+    if (match.guard) {
+      const allowed = await match.guard();
+      if (!allowed) return; // guard handled the redirect
+    }
+
     // Render
     if (match.render) {
-      match.render(params);
+      await match.render(params);
     }
   }
 
