@@ -58,7 +58,7 @@ export async function renderArticlePage(contentEl, params) {
   contentEl.innerHTML = `
     <main class="main-content">
       <div class="container">
-        <div class="content-grid">
+        <div class="article-grid">
           <div class="content-main">
             <article class="article-page animate-fade-in" id="article-${article.id}" style="max-width: none; margin: 0; padding-top: 0; padding-left: 0; padding-right: 0;">
               <a href="/" data-link class="article-back">
@@ -138,6 +138,8 @@ export async function renderArticlePage(contentEl, params) {
               </div>
             </div>
           </aside>
+          
+          <div class="article-right-empty"></div>
         </div>
       </div>
     </main>

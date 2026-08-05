@@ -4,7 +4,8 @@
 
 /* --- Tablet (max 1199px) --- */
 @media (max-width: 1199px) {
-  .content-grid {
+  .content-grid,
+  .article-grid {
     grid-template-columns: 1fr;
   }
 
@@ -156,6 +157,10 @@
 
   .news-card-title {
     font-size: var(--text-base);
+  }
+
+  .article-image {
+    width: 100%;
   }
 
   .article-page {

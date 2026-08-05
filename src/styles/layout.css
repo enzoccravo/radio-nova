@@ -226,11 +226,25 @@
   transform: scaleY(0.3);
 }
 
-.player-wave span:nth-child(1) { animation-delay: 0s; }
-.player-wave span:nth-child(2) { animation-delay: 0.15s; }
-.player-wave span:nth-child(3) { animation-delay: 0.3s; }
-.player-wave span:nth-child(4) { animation-delay: 0.45s; }
-.player-wave span:nth-child(5) { animation-delay: 0.6s; }
+.player-wave span:nth-child(1) {
+  animation-delay: 0s;
+}
+
+.player-wave span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.player-wave span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.player-wave span:nth-child(4) {
+  animation-delay: 0.45s;
+}
+
+.player-wave span:nth-child(5) {
+  animation-delay: 0.6s;
+}
 
 .player-wave.paused span {
   animation-play-state: paused;
@@ -268,7 +282,7 @@
   border-radius: 50%;
   background: white;
   cursor: pointer;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
 }
 
 .player-volume input[type="range"]::-moz-range-thumb {
@@ -290,6 +304,30 @@
   grid-template-columns: 1fr var(--sidebar-width);
   gap: var(--space-8);
   align-items: start;
+}
+
+.article-grid {
+  display: grid;
+  grid-template-columns: 200px minmax(0, 1fr) 200px;
+  gap: var(--space-8);
+  align-items: start;
+}
+
+/* Ensure the article comes first in DOM but is placed in the center visually on desktop */
+@media (min-width: 1200px) {
+  .article-grid>.content-main {
+    grid-column: 2;
+  }
+
+  .article-grid>.sidebar {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .article-grid>.article-right-empty {
+    grid-column: 3;
+    grid-row: 1;
+  }
 }
 
 .content-main {

@@ -33,6 +33,7 @@ CREATE TABLE IF NOT EXISTS articles (
   category text NOT NULL REFERENCES categories(slug),
   author text DEFAULT 'Redacción Radio Nova',
   featured boolean DEFAULT false,
+  is_main_featured boolean DEFAULT false,
   published boolean DEFAULT false,
   created_at timestamptz DEFAULT now(),
   updated_at timestamptz DEFAULT now()
@@ -53,6 +54,7 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS set_updated_at ON articles;
 CREATE TRIGGER set_updated_at
   BEFORE UPDATE ON articles
   FOR EACH ROW
@@ -65,11 +67,13 @@ ALTER TABLE articles ENABLE ROW LEVEL SECURITY;
 ALTER TABLE categories ENABLE ROW LEVEL SECURITY;
 
 -- Articles: anyone can read published articles
+DROP POLICY IF EXISTS "Public can read published articles" ON articles;
 CREATE POLICY "Public can read published articles"
   ON articles FOR SELECT
   USING (published = true);
 
 -- Articles: authenticated users can do everything
+DROP POLICY IF EXISTS "Authenticated users full access to articles" ON articles;
 CREATE POLICY "Authenticated users full access to articles"
   ON articles FOR ALL
   TO authenticated
@@ -77,11 +81,13 @@ CREATE POLICY "Authenticated users full access to articles"
   WITH CHECK (true);
 
 -- Categories: anyone can read
+DROP POLICY IF EXISTS "Public can read categories" ON categories;
 CREATE POLICY "Public can read categories"
   ON categories FOR SELECT
   USING (true);
 
 -- Categories: authenticated users can insert/update
+DROP POLICY IF EXISTS "Authenticated users can manage categories" ON categories;
 CREATE POLICY "Authenticated users can manage categories"
   ON categories FOR ALL
   TO authenticated

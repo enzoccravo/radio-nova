@@ -541,10 +541,10 @@
 }
 
 .article-image {
-  width: 100%;
+  width: 70%;
+  margin: 0 auto var(--space-8);
   border-radius: var(--radius-xl);
   overflow: hidden;
-  margin-bottom: var(--space-8);
 }
 
 .article-image img {
