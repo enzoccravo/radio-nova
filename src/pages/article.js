@@ -1,5 +1,6 @@
 import { getArticleBySlug, getArticlesByCategory } from '../data/news.js';
 import { formatDate, getCategoryClass, getCategoryColor, icons } from '../utils.js';
+import { getAdSlot, renderAdContent } from '../lib/ads.js';
 
 /**
  * Render the article page
@@ -54,6 +55,9 @@ export async function renderArticlePage(contentEl, params) {
   const related = categoryArticles
     .filter(n => n.id !== article.id)
     .slice(0, 3);
+
+  const articleSlot = await getAdSlot('sidebar_article');
+  const articleAdContent = renderAdContent(articleSlot);
 
   contentEl.innerHTML = `
     <main class="main-content">
@@ -130,14 +134,15 @@ export async function renderArticlePage(contentEl, params) {
             ` : ''}
           </div>
 
-          <aside class="sidebar" style="position: sticky; top: calc(var(--header-height) + var(--player-height) + 2rem); height: max-content;">
-            <div class="promo-space promo-space-vertical" style="height: 600px;">
-              <div class="ad-placeholder">
-                ${icons.ad}
-                <span>Espacio publicitario</span>
+          ${articleAdContent ? `
+            <aside class="sidebar" style="position: sticky; top: calc(var(--header-height) + var(--player-height) + 2rem); height: max-content;">
+              <div class="promo-space promo-space-vertical" style="height: 600px;">
+                ${articleAdContent}
               </div>
-            </div>
-          </aside>
+            </aside>
+          ` : `
+            <aside class="sidebar" style="position: sticky; top: calc(var(--header-height) + var(--player-height) + 2rem); height: max-content;"></aside>
+          `}
           
           <div class="article-right-empty"></div>
         </div>

@@ -161,6 +161,35 @@ export async function createCategory(slug, label) {
   return data;
 }
 
+// ---- Ad Slots ----
+
+/**
+ * Fetch all ad slots (public, for front-end rendering).
+ */
+export async function fetchAdSlots() {
+  const { data, error } = await supabase
+    .from('ad_slots')
+    .select('*');
+
+  if (error) throw error;
+  return data || [];
+}
+
+/**
+ * Update an ad slot (authenticated, for admin).
+ */
+export async function updateAdSlot(id, updates) {
+  const { data, error } = await supabase
+    .from('ad_slots')
+    .update({ ...updates, updated_at: new Date().toISOString() })
+    .eq('id', id)
+    .select()
+    .single();
+
+  if (error) throw error;
+  return data;
+}
+
 // ---- Utility ----
 
 /**

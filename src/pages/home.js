@@ -1,6 +1,7 @@
 import { getArticles } from '../data/news.js';
 import { renderFeaturedGrid, renderNewsCard } from '../components/news-card.js';
 import { renderSidebar, initWeather } from '../components/sidebar.js';
+import { getAdSlot, renderAdContent } from '../lib/ads.js';
 import { icons } from '../utils.js';
 
 /**
@@ -36,18 +37,20 @@ export async function renderHomePage(contentEl) {
     const featuredIds = new Set(featuredArticles.map(a => a.id));
     const rest = newsData.filter(n => !featuredIds.has(n.id));
 
+    const bannerSlot = await getAdSlot('banner_top');
+    const bannerContent = renderAdContent(bannerSlot);
+
     contentEl.innerHTML = `
       <main class="main-content">
         <div class="container">
           ${renderFeaturedGrid(featuredArticles)}
 
-          <!-- Ad Banner -->
-          <div class="promo-space promo-space-horizontal" id="promo-top">
-            <div class="ad-placeholder">
-              ${icons.ad}
-              <span>Espacio publicitario</span>
+          ${bannerContent ? `
+            <!-- Ad Banner -->
+            <div class="promo-space promo-space-horizontal" id="promo-top">
+              ${bannerContent}
             </div>
-          </div>
+          ` : ''}
 
           <div class="content-grid">
             <div class="content-main">

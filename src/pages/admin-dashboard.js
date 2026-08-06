@@ -105,9 +105,14 @@ function renderDashboardContent(contentEl, articles, categories) {
     <div class="admin-content">
       <div class="admin-header">
         <h1>Noticias</h1>
-        <a href="/admin/nueva" data-link class="btn btn-primary">
-          + Nueva noticia
-        </a>
+        <div style="display: flex; gap: var(--space-3);">
+          <a href="/admin/anuncios" data-link class="btn btn-ghost">
+            📢 Anuncios
+          </a>
+          <a href="/admin/nueva" data-link class="btn btn-primary">
+            + Nueva noticia
+          </a>
+        </div>
       </div>
 
       <div class="admin-filters" id="admin-filters">

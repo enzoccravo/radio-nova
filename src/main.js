@@ -9,6 +9,7 @@ import { renderContactPage } from './pages/contact.js';
 import { renderAdminLoginPage } from './pages/admin-login.js';
 import { renderAdminDashboardPage } from './pages/admin-dashboard.js';
 import { renderAdminEditorPage } from './pages/admin-editor.js';
+import { renderAdminAdsPage } from './pages/admin-ads.js';
 import { getSession, logout } from './lib/supabase.js';
 
 // App container
@@ -185,6 +186,15 @@ function initRouter() {
         loadAdminCss();
         renderAdminShell();
         await renderAdminEditorPage(contentEl, params);
+      },
+    },
+    {
+      path: '/admin/anuncios',
+      guard: requireAuth,
+      render: async () => {
+        loadAdminCss();
+        renderAdminShell();
+        await renderAdminAdsPage(contentEl);
       },
     },
   ]);

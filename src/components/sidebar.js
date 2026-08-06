@@ -1,5 +1,6 @@
 import { formatDate, getCategoryColor, icons } from '../utils.js';
 import { getArticles } from '../data/news.js';
+import { getAdSlot, renderAdContent } from '../lib/ads.js';
 
 /**
  * Render the sidebar (async — fetches recent news from Supabase)
@@ -7,6 +8,9 @@ import { getArticles } from '../data/news.js';
 export async function renderSidebar() {
   const newsData = await getArticles();
   const recentHtml = renderRecentNews(newsData);
+
+  const sidebarSlot = await getAdSlot('sidebar_home');
+  const sidebarAdContent = renderAdContent(sidebarSlot);
 
   return `
     <aside class="sidebar" id="sidebar">
@@ -29,13 +33,12 @@ export async function renderSidebar() {
         </div>
       </div>
 
-      <!-- Promo Space -->
-      <div class="promo-space promo-space-sidebar" id="promo-sidebar">
-        <div class="ad-placeholder">
-          ${icons.ad}
-          <span>Espacio publicitario</span>
+      ${sidebarAdContent ? `
+        <!-- Promo Space -->
+        <div class="promo-space promo-space-sidebar" id="promo-sidebar">
+          ${sidebarAdContent}
         </div>
-      </div>
+      ` : ''}
 
       <!-- Recent News -->
       <div class="sidebar-widget" id="recent-news-widget">
