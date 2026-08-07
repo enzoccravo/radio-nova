@@ -51,12 +51,29 @@
   letter-spacing: 0.03em;
 }
 
-.badge-locales { background: var(--cat-locales); }
-.badge-politica { background: var(--cat-politica); }
-.badge-deportes { background: var(--cat-deportes); }
-.badge-economia { background: var(--cat-economia); }
-.badge-cultura { background: var(--cat-cultura); }
-.badge-policiales { background: var(--cat-policiales); }
+.badge-locales {
+  background: var(--cat-locales);
+}
+
+.badge-politica {
+  background: var(--cat-politica);
+}
+
+.badge-deportes {
+  background: var(--cat-deportes);
+}
+
+.badge-economia {
+  background: var(--cat-economia);
+}
+
+.badge-cultura {
+  background: var(--cat-cultura);
+}
+
+.badge-policiales {
+  background: var(--cat-policiales);
+}
 
 .news-card-body {
   padding: var(--space-5);
@@ -155,12 +172,10 @@
 .featured-main-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.82) 0%,
-    rgba(0, 0, 0, 0.35) 45%,
-    rgba(0, 0, 0, 0.05) 100%
-  );
+  background: linear-gradient(to top,
+      rgba(0, 0, 0, 0.82) 0%,
+      rgba(0, 0, 0, 0.35) 45%,
+      rgba(0, 0, 0, 0.05) 100%);
 }
 
 .featured-main-content {
@@ -255,12 +270,10 @@
 .featured-secondary-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.8) 0%,
-    rgba(0, 0, 0, 0.25) 60%,
-    transparent 100%
-  );
+  background: linear-gradient(to top,
+      rgba(0, 0, 0, 0.8) 0%,
+      rgba(0, 0, 0, 0.25) 60%,
+      transparent 100%);
 }
 
 .featured-secondary-content {
@@ -307,6 +320,8 @@
 
 .promo-space-vertical {
   width: 100%;
+  min-height: 450px;
+  max-height: 75vh;
 }
 
 .ad-placeholder {
@@ -773,8 +788,13 @@
 }
 
 @keyframes skeleton-shimmer {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* --- Mobile Nav Menu --- */

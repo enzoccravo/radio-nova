@@ -16,6 +16,16 @@
     gap: var(--space-6);
   }
 
+  /* The sidebar inside the article page only has the ad */
+  .article-grid > .sidebar {
+    grid-template-columns: 1fr;
+    margin-top: var(--space-8);
+  }
+
+  .promo-space-vertical {
+    min-height: 100px;
+  }
+
   .news-grid {
     grid-template-columns: repeat(2, 1fr);
   }

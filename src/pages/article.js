@@ -136,7 +136,7 @@ export async function renderArticlePage(contentEl, params) {
 
           ${articleAdContent ? `
             <aside class="sidebar" style="position: sticky; top: calc(var(--header-height) + var(--player-height) + 2rem); height: max-content;">
-              <div class="promo-space promo-space-vertical" style="height: 600px;">
+              <div class="promo-space promo-space-vertical">
                 ${articleAdContent}
               </div>
             </aside>
