@@ -10,34 +10,42 @@ export function renderPlayer() {
   return `
     <div class="player-bar" id="player-bar">
       <div class="container player-inner">
-        <div class="player-live-badge">
-          <span class="player-live-dot"></span>
-          <span>En vivo</span>
+        <!-- Left: Info & Badge -->
+        <div class="player-left">
+          <img src="/logo.jpeg" alt="Radio Nova" class="player-thumb" />
+          <div class="player-info">
+            <span class="player-title" id="player-title">Radio Nova en vivo</span>
+            <span class="player-subtitle">Paso de los Libres</span>
+          </div>
+          <div class="player-live-badge">
+            <span class="player-live-dot"></span>
+            <span>En vivo</span>
+          </div>
         </div>
 
-        <button class="player-btn" id="player-btn" aria-label="Reproducir Radio Nova en vivo">
-          ${icons.play}
-        </button>
-
-        <div class="player-wave paused" id="player-wave">
-          <span></span><span></span><span></span><span></span><span></span>
+        <!-- Center: Controls -->
+        <div class="player-center">
+          <button class="player-btn-large" id="player-btn" aria-label="Reproducir Radio Nova en vivo">
+            ${icons.play}
+          </button>
+          <div class="player-wave paused" id="player-wave">
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
         </div>
 
-        <div class="player-info">
-          <span class="player-title" id="player-title">Radio Nova</span>
-          <span class="player-subtitle">Paso de los Libres</span>
-        </div>
-
-        <div class="player-volume">
-          <span id="volume-icon">${icons.volume}</span>
-          <input
-            type="range"
-            id="player-volume"
-            min="0"
-            max="100"
-            value="80"
-            aria-label="Volumen"
-          />
+        <!-- Right: Volume -->
+        <div class="player-right">
+          <div class="player-volume">
+            <span id="volume-icon">${icons.volume}</span>
+            <input
+              type="range"
+              id="player-volume"
+              min="0"
+              max="100"
+              value="80"
+              aria-label="Volumen"
+            />
+          </div>
         </div>
 
         <audio id="player-audio" preload="none" src="${STREAM_URL}"></audio>

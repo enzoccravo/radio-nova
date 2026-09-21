@@ -27,7 +27,7 @@ export function renderHeader() {
           <a href="/categoria/economia" data-link class="nav-link" data-nav="economia">Economía</a>
           <a href="/categoria/cultura" data-link class="nav-link" data-nav="cultura">Cultura</a>
           <a href="/categoria/policiales" data-link class="nav-link" data-nav="policiales">Policiales</a>
-          <a href="/contacto" data-link class="nav-link" data-nav="contacto">Contacto</a>
+          <!-- <a href="/contacto" data-link class="nav-link" data-nav="contacto">Contacto</a> -->
         </nav>
 
         <button class="nav-toggle" id="nav-toggle" aria-label="Menú de navegación">

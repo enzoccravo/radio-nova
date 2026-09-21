@@ -1,10 +1,21 @@
 import { adminFetchArticleById, saveArticle, fetchCategories, createCategory, generateSlug } from '../lib/supabase.js';
+import { uploadAndCompressImage } from '../lib/cloudinary.js';
 
 let quillInstance = null;
 
 /**
  * Show a toast notification
- */
+ *//** Add minimal spinner styles to head if not present */
+if (!document.getElementById('admin-spinner-css')) {
+  const style = document.createElement('style');
+  style.id = 'admin-spinner-css';
+  style.innerHTML = `
+    .btn-loading { opacity: 0.7; pointer-events: none; position: relative; }
+    .btn-loading::after { content: " ⏳"; }
+  `;
+  document.head.appendChild(style);
+}
+
 function showToast(message, type = 'success') {
   document.querySelectorAll('.admin-toast').forEach(t => t.remove());
   const toast = document.createElement('div');
@@ -144,8 +155,12 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
           <!-- Image Panel -->
           <div class="admin-editor-panel">
             <h3>Imagen principal</h3>
-            <div class="admin-field" style="margin-bottom: 0;">
-              <input type="text" id="editor-image" placeholder="https://images.unsplash.com/..." value="${(article?.image || '').replace(/"/g, '&quot;')}" />
+            <div class="admin-field" style="margin-bottom: 0; display: flex; flex-direction: column; gap: var(--space-2);">
+              <div style="display: flex; gap: var(--space-2);">
+                <input type="text" id="editor-image" placeholder="URL de la imagen (o súbela...)" value="${(article?.image || '').replace(/"/g, '&quot;')}" style="flex: 1;" />
+                <button type="button" class="btn" id="btn-upload-image" style="white-space: nowrap;">Subir Foto</button>
+                <input type="file" id="file-upload-image" accept="image/*" style="display: none;" />
+              </div>
               <div class="admin-image-preview" id="image-preview">
                 ${article?.image ? `<img src="${article.image}" alt="Preview" />` : 'Sin imagen'}
               </div>
@@ -160,15 +175,44 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
   // Initialize Quill
   initQuill(article?.body || '');
 
-  // Image preview
+  // Image preview & Upload
   const imageInput = document.getElementById('editor-image');
   const imagePreview = document.getElementById('image-preview');
-  imageInput.addEventListener('input', () => {
+  const btnUpload = document.getElementById('btn-upload-image');
+  const fileUpload = document.getElementById('file-upload-image');
+
+  const updatePreview = () => {
     const url = imageInput.value.trim();
     if (url) {
       imagePreview.innerHTML = `<img src="${url}" alt="Preview" onerror="this.parentElement.innerHTML='Imagen no válida'" />`;
     } else {
       imagePreview.innerHTML = 'Sin imagen';
+    }
+  };
+
+  imageInput.addEventListener('input', updatePreview);
+
+  btnUpload.addEventListener('click', () => {
+    fileUpload.click();
+  });
+
+  fileUpload.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    btnUpload.classList.add('btn-loading');
+    btnUpload.textContent = 'Subiendo...';
+    try {
+      const optimizedUrl = await uploadAndCompressImage(file);
+      imageInput.value = optimizedUrl;
+      updatePreview();
+      showToast('Imagen principal subida con éxito');
+    } catch (err) {
+      showToast('Error subiendo imagen: ' + err.message, 'error');
+    } finally {
+      btnUpload.classList.remove('btn-loading');
+      btnUpload.textContent = 'Subir Foto';
+      fileUpload.value = '';
     }
   });
 
@@ -210,13 +254,27 @@ async function initQuill(initialContent) {
     },
   });
 
-  // Custom image handler — prompt for URL instead of upload
+  // Custom image handler - upload to Cloudinary
   quillInstance.getModule('toolbar').addHandler('image', () => {
-    const url = prompt('URL de la imagen:');
-    if (url) {
-      const range = quillInstance.getSelection(true);
-      quillInstance.insertEmbed(range.index, 'image', url);
-    }
+    const input = document.createElement('input');
+    input.setAttribute('type', 'file');
+    input.setAttribute('accept', 'image/*');
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      if (file) {
+        showToast('Subiendo imagen para el contenido...', 'info');
+        try {
+          const url = await uploadAndCompressImage(file);
+          const range = quillInstance.getSelection(true);
+          quillInstance.insertEmbed(range.index, 'image', url);
+          showToast('Imagen insertada en el texto');
+        } catch (err) {
+          showToast('Error al subir imagen: ' + err.message, 'error');
+        }
+      }
+    };
   });
 
   // Set initial content if editing

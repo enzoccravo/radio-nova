@@ -108,7 +108,7 @@
   /* Layout */
   --container-max: 1280px;
   --header-height: 72px;
-  --player-height: 56px;
+  --player-height: 90px;
   --sidebar-width: 340px;
 }
 
@@ -130,9 +130,10 @@ body {
   overflow-x: hidden;
 }
 
-/* Account for fixed header + player */
+/* Account for fixed header at top and player at bottom */
 #app {
-  padding-top: calc(var(--header-height) + var(--player-height));
+  padding-top: var(--header-height);
+  padding-bottom: var(--player-height);
 }
 
 h1, h2, h3, h4, h5, h6 {
