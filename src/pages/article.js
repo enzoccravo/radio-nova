@@ -86,7 +86,7 @@ export async function renderArticlePage(contentEl, params) {
 
               ${article.image ? `
                 <div class="article-image">
-                  <img src="${article.image}" alt="${article.title}" />
+                  <img src="${article.image}" alt="${article.title}" style="object-position: ${(article.image_focal_x ?? 0.5) * 100}% ${(article.image_focal_y ?? 0.5) * 100}%;" />
                 </div>
               ` : ''}
 
@@ -120,7 +120,7 @@ export async function renderArticlePage(contentEl, params) {
                   ${related.map((r, i) => `
                     <a href="/noticia/${r.slug}" data-link class="recent-news-item" style="text-decoration: none; color: inherit; flex-direction: column; gap: var(--space-3);">
                       <div style="width: 100%; aspect-ratio: 16/10; border-radius: var(--radius-lg); overflow: hidden;">
-                        <img src="${r.image}" alt="${r.title}" style="width: 100%; height: 100%; object-fit: cover;" loading="lazy" />
+                        <img src="${r.image}" alt="${r.title}" style="width: 100%; height: 100%; object-fit: cover; object-position: ${(r.image_focal_x ?? 0.5) * 100}% ${(r.image_focal_y ?? 0.5) * 100}%;" loading="lazy" />
                       </div>
                       <div class="recent-news-info">
                         <span class="recent-news-cat" style="color: ${getCategoryColor(r.category)}">${r.category_label || r.category}</span>

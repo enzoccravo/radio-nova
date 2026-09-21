@@ -129,3 +129,7 @@ CREATE POLICY "Authenticated users can manage ad_slots"
   TO authenticated
   USING (true)
   WITH CHECK (true);
+
+-- 6. Focal Point for responsive image cropping
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS image_focal_x real DEFAULT 0.5;
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS image_focal_y real DEFAULT 0.5;

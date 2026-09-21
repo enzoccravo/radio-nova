@@ -114,7 +114,7 @@
 
 @media (max-width: 768px) {
   :root {
-    --player-height: 140px;
+    --player-height: 100px;
   }
 }
 

@@ -12,6 +12,7 @@ export function renderNewsCard(article, index = 0) {
             src="${article.image}"
             alt="${article.title}"
             loading="lazy"
+            style="object-position: ${(article.image_focal_x ?? 0.5) * 100}% ${(article.image_focal_y ?? 0.5) * 100}%;"
           />
           <span class="news-card-badge ${getCategoryClass(article.category)}">${article.category_label || article.category}</span>
         </div>
@@ -47,7 +48,7 @@ export function renderFeaturedGrid(articles) {
         <!-- Main featured article -->
         <a href="/noticia/${main.slug}" data-link class="featured-main" style="text-decoration: none; color: inherit;">
           <div class="featured-main-image">
-            <img src="${main.image}" alt="${main.title}" />
+            <img src="${main.image}" alt="${main.title}" style="object-position: ${(main.image_focal_x ?? 0.5) * 100}% ${(main.image_focal_y ?? 0.5) * 100}%;" />
           </div>
           <div class="featured-main-overlay"></div>
           <div class="featured-main-content">
@@ -68,7 +69,7 @@ export function renderFeaturedGrid(articles) {
           ${secondary.map(article => `
             <a href="/noticia/${article.slug}" data-link class="featured-secondary-card" style="text-decoration: none; color: inherit;">
               <div class="featured-secondary-image">
-                <img src="${article.image}" alt="${article.title}" />
+                <img src="${article.image}" alt="${article.title}" style="object-position: ${(article.image_focal_x ?? 0.5) * 100}% ${(article.image_focal_y ?? 0.5) * 100}%;" />
               </div>
               <div class="featured-secondary-overlay"></div>
               <div class="featured-secondary-content">

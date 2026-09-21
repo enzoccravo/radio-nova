@@ -161,8 +161,39 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
                 <button type="button" class="btn" id="btn-upload-image" style="white-space: nowrap;">Subir Foto</button>
                 <input type="file" id="file-upload-image" accept="image/*" style="display: none;" />
               </div>
-              <div class="admin-image-preview" id="image-preview">
-                ${article?.image ? `<img src="${article.image}" alt="Preview" />` : 'Sin imagen'}
+
+              <!-- Focal Point Picker -->
+              <div id="focal-point-section" style="display: ${article?.image ? 'block' : 'none'};">
+                <div class="focal-point-container" id="focal-point-container">
+                  <img id="focal-point-image" src="${article?.image || ''}" alt="Seleccionar punto focal" />
+                  <div class="focal-point-crosshair" id="focal-crosshair" style="--fx: ${(article?.image_focal_x ?? 0.5) * 100}%; --fy: ${(article?.image_focal_y ?? 0.5) * 100}%;"></div>
+                  <div class="focal-point-marker" id="focal-point-marker" style="left: ${(article?.image_focal_x ?? 0.5) * 100}%; top: ${(article?.image_focal_y ?? 0.5) * 100}%;"></div>
+                </div>
+                <p class="focal-point-label">Hacé clic en la parte más importante de la imagen</p>
+                <input type="hidden" id="editor-focal-x" value="${article?.image_focal_x ?? 0.5}" />
+                <input type="hidden" id="editor-focal-y" value="${article?.image_focal_y ?? 0.5}" />
+
+                <!-- Device Previews -->
+                <div class="device-previews" id="device-previews">
+                  <div class="device-preview">
+                    <span class="device-preview-label">🖥 Desktop</span>
+                    <div class="device-preview-frame desktop">
+                      <img id="preview-desktop" src="" alt="Preview desktop" />
+                    </div>
+                  </div>
+                  <div class="device-preview">
+                    <span class="device-preview-label">📱 Tablet</span>
+                    <div class="device-preview-frame tablet">
+                      <img id="preview-tablet" src="" alt="Preview tablet" />
+                    </div>
+                  </div>
+                  <div class="device-preview">
+                    <span class="device-preview-label">📲 Celular</span>
+                    <div class="device-preview-frame mobile">
+                      <img id="preview-mobile" src="" alt="Preview celular" />
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -175,23 +206,95 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
   // Initialize Quill
   initQuill(article?.body || '');
 
-  // Image preview & Upload
+  // Image preview, Upload & Focal Point
   const imageInput = document.getElementById('editor-image');
-  const imagePreview = document.getElementById('image-preview');
   const btnUpload = document.getElementById('btn-upload-image');
   const fileUpload = document.getElementById('file-upload-image');
+  const focalSection = document.getElementById('focal-point-section');
+  const focalContainer = document.getElementById('focal-point-container');
+  const focalImage = document.getElementById('focal-point-image');
+  const focalMarker = document.getElementById('focal-point-marker');
+  const focalCrosshair = document.getElementById('focal-crosshair');
+  const focalXInput = document.getElementById('editor-focal-x');
+  const focalYInput = document.getElementById('editor-focal-y');
 
-  const updatePreview = () => {
+  /**
+   * Update the focal point position and refresh device previews
+   */
+  function setFocalPoint(x, y) {
+    // Clamp between 0 and 1
+    x = Math.max(0, Math.min(1, x));
+    y = Math.max(0, Math.min(1, y));
+
+    focalXInput.value = x.toFixed(3);
+    focalYInput.value = y.toFixed(3);
+    focalMarker.style.left = `${x * 100}%`;
+    focalMarker.style.top = `${y * 100}%`;
+    focalCrosshair.style.setProperty('--fx', `${x * 100}%`);
+    focalCrosshair.style.setProperty('--fy', `${y * 100}%`);
+
+    updateDevicePreviews();
+  }
+
+  /**
+   * Update the 3 device preview thumbnails using CSS object-position
+   */
+  function updateDevicePreviews() {
+    const url = imageInput.value.trim();
+    if (!url) return;
+
+    const fx = parseFloat(focalXInput.value) || 0.5;
+    const fy = parseFloat(focalYInput.value) || 0.5;
+    const objectPos = `${fx * 100}% ${fy * 100}%`;
+
+    const previewDesktop = document.getElementById('preview-desktop');
+    const previewTablet = document.getElementById('preview-tablet');
+    const previewMobile = document.getElementById('preview-mobile');
+
+    if (previewDesktop) {
+      previewDesktop.src = url;
+      previewDesktop.style.objectPosition = objectPos;
+    }
+    if (previewTablet) {
+      previewTablet.src = url;
+      previewTablet.style.objectPosition = objectPos;
+    }
+    if (previewMobile) {
+      previewMobile.src = url;
+      previewMobile.style.objectPosition = objectPos;
+    }
+  }
+
+  /**
+   * Show focal point section and update everything when image changes
+   */
+  const updateImageAndFocal = (resetFocal = false) => {
     const url = imageInput.value.trim();
     if (url) {
-      imagePreview.innerHTML = `<img src="${url}" alt="Preview" onerror="this.parentElement.innerHTML='Imagen no válida'" />`;
+      focalSection.style.display = 'block';
+      focalImage.src = url;
+      if (resetFocal) {
+        setFocalPoint(0.5, 0.5);
+      } else {
+        updateDevicePreviews();
+      }
     } else {
-      imagePreview.innerHTML = 'Sin imagen';
+      focalSection.style.display = 'none';
     }
   };
 
-  imageInput.addEventListener('input', updatePreview);
+  // Manual URL paste
+  imageInput.addEventListener('input', () => updateImageAndFocal(true));
 
+  // Focal point click handler
+  focalContainer.addEventListener('click', (e) => {
+    const rect = focalContainer.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    setFocalPoint(x, y);
+  });
+
+  // Upload button
   btnUpload.addEventListener('click', () => {
     fileUpload.click();
   });
@@ -205,7 +308,7 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
     try {
       const optimizedUrl = await uploadAndCompressImage(file);
       imageInput.value = optimizedUrl;
-      updatePreview();
+      updateImageAndFocal(true);
       showToast('Imagen principal subida con éxito');
     } catch (err) {
       showToast('Error subiendo imagen: ' + err.message, 'error');
@@ -215,6 +318,11 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
       fileUpload.value = '';
     }
   });
+
+  // Initialize previews if editing an article with an existing image
+  if (article?.image) {
+    updateDevicePreviews();
+  }
 
   // Category combobox
   initCategoryCombobox(categories);
@@ -363,6 +471,8 @@ async function handleSave(publish, existingArticle, isEdit) {
   const categorySlug = document.getElementById('category-slug').value;
   const author = document.getElementById('editor-author').value.trim();
   const image = document.getElementById('editor-image').value.trim();
+  const imageFocalX = parseFloat(document.getElementById('editor-focal-x')?.value) || 0.5;
+  const imageFocalY = parseFloat(document.getElementById('editor-focal-y')?.value) || 0.5;
   let excerpt = document.getElementById('editor-excerpt').value.trim();
   const body = quillInstance ? quillInstance.root.innerHTML : '';
 
@@ -393,6 +503,8 @@ async function handleSave(publish, existingArticle, isEdit) {
     excerpt,
     body,
     image,
+    image_focal_x: imageFocalX,
+    image_focal_y: imageFocalY,
     category: categorySlug,
     author: author || 'Redacción Radio Nova',
     published: publish,
