@@ -560,17 +560,28 @@
   margin: 0 auto var(--space-8);
   border-radius: var(--radius-xl);
   overflow: hidden;
+  aspect-ratio: 16 / 10;
 }
 
 .article-image img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
 }
 
 .article-body {
   font-size: var(--text-lg);
   line-height: 1.8;
   color: var(--color-text-secondary);
+}
+
+.article-body img {
+  display: block;
+  width: 70%;
+  max-width: 100%;
+  height: auto;
+  margin: var(--space-6) auto;
+  border-radius: var(--radius-lg);
 }
 
 .article-body p {

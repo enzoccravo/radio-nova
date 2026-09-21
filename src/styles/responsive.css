@@ -169,7 +169,8 @@
     font-size: var(--text-base);
   }
 
-  .article-image {
+  .article-image,
+  .article-body img {
     width: 100%;
   }
 
