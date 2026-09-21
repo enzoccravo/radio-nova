@@ -268,9 +268,10 @@
 .player-wave span:nth-child(5) { animation-delay: 0.6s; }
 
 .player-wave.paused span {
-  animation-play-state: paused;
-  transform: scaleY(0.3);
+  animation: none;
+  transform: scaleY(0.15);
   background: var(--color-text-muted);
+  transition: transform 0.3s ease, background 0.3s ease;
 }
 
 /* Right Section */
@@ -316,18 +317,35 @@
 
 @media (max-width: 768px) {
   .player-inner {
-    padding: 0 var(--space-2);
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-4);
+    padding: var(--space-3);
   }
+  
   .player-left {
-    width: 60%;
-  }
-  .player-live-badge, .player-right {
     display: none;
   }
+
   .player-center {
-    width: 40%;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
+    width: 100%;
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .player-right {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .player-volume {
+    width: 80%;
+    justify-content: center;
+  }
+
+  .player-volume input[type="range"] {
+    width: 100%;
   }
 }
 

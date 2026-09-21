@@ -112,6 +112,12 @@
   --sidebar-width: 340px;
 }
 
+@media (max-width: 768px) {
+  :root {
+    --player-height: 140px;
+  }
+}
+
 /* --- Base Styles --- */
 html {
   font-size: 16px;
