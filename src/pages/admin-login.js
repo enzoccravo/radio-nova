@@ -18,11 +18,7 @@ export function renderAdminLoginPage(contentEl) {
         <div class="admin-login-error" id="login-error"></div>
 
         <form id="login-form">
-          <!-- Honeypot field (hidden from real users, catches simple bots) -->
-          <div style="opacity: 0; position: absolute; top: 0; left: 0; height: 0; width: 0; z-index: -1; overflow: hidden;">
-            <label for="login-website">Website (dejar en blanco)</label>
-            <input type="text" id="login-website" name="website" tabindex="-1" autocomplete="off" />
-          </div>
+          <!-- Honeypot removed to prevent autofill issues -->
 
           <div class="admin-field">
             <label for="login-email">Email</label>
@@ -52,19 +48,6 @@ export function renderAdminLoginPage(contentEl) {
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
-
-    // 1. Honeypot check: If the hidden field is filled, it's a bot.
-    const honeypot = document.getElementById('login-website').value;
-    if (honeypot) {
-      // Fake a loading state and do nothing to trick the bot
-      submitBtn.textContent = 'Ingresando...';
-      submitBtn.disabled = true;
-      setTimeout(() => {
-        submitBtn.textContent = 'Iniciar sesión';
-        submitBtn.disabled = false;
-      }, 2000);
-      return;
-    }
 
     // 2. Rate Limiting Check (Frontend)
     const lockoutData = JSON.parse(localStorage.getItem('admin_login_lockout') || '{"attempts": 0, "lockUntil": 0}');
