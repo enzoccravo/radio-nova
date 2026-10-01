@@ -42,8 +42,12 @@
 /* --- Mobile (max 768px) --- */
 @media (max-width: 768px) {
   :root {
-    --header-height: 64px;
+    --header-height: 100px;
     --player-height: 52px;
+  }
+
+  .header-inner {
+    height: 64px;
   }
 
   .container {

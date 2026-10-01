@@ -1,5 +1,6 @@
 import { fetchSchedule } from '../lib/supabase.js';
 import { getAdSlot, renderAdContent } from '../lib/ads.js';
+import { icons } from '../utils.js';
 
 /**
  * Get the currently airing program based on current time
@@ -60,6 +61,11 @@ export async function renderSidebar() {
               <span class="now-playing-time">${currentProgram.time_start} – ${currentProgram.time_end}</span>
               ${currentProgram.genre ? `<span class="now-playing-genre">${currentProgram.genre}</span>` : ''}
               ${currentProgram.description ? `<p class="now-playing-desc">${currentProgram.description}</p>` : ''}
+              ${currentProgram.program_name.includes('Haciendo el Cruce') ? `
+                <a href="https://www.instagram.com/haciendoelcruce" target="_blank" rel="noopener noreferrer" class="btn btn-sm" style="margin-top: var(--space-2); display: inline-flex; align-items: center; gap: 6px; align-self: flex-start;">
+                  <span style="width: 14px; height: 14px; display: inline-block; fill: currentColor;">${icons.instagram}</span> ¡Seguinos en Instagram!
+                </a>
+              ` : ''}
             </div>
           </div>
         </div>

@@ -6,6 +6,17 @@ import { icons } from '../utils.js';
 export function renderHeader() {
   return `
     <header class="site-header" id="site-header">
+      <div class="top-bar">
+        <div class="container top-bar-inner">
+          <a href="https://www.instagram.com/haciendoelcruce" target="_blank" rel="noopener noreferrer" class="top-bar-link">
+            ${icons.instagram} <span class="tb-hide">Seguí a </span>Haciendo el Cruce<span class="tb-hide"> en Instagram</span>
+          </a>
+          <span class="top-bar-divider">|</span>
+          <a href="https://www.facebook.com/Yayetopa" target="_blank" rel="noopener noreferrer" class="top-bar-link">
+            ${icons.facebook} <span class="tb-hide">Conocé a </span>Yayetopa<span class="tb-hide"> en Facebook</span>
+          </a>
+        </div>
+      </div>
       <div class="container header-inner">
         <a href="/" data-link class="header-brand" id="header-brand">
           <img
