@@ -10,6 +10,7 @@ import { renderAdminLoginPage } from './pages/admin-login.js';
 import { renderAdminDashboardPage } from './pages/admin-dashboard.js';
 import { renderAdminEditorPage } from './pages/admin-editor.js';
 import { renderAdminAdsPage } from './pages/admin-ads.js';
+import { renderAdminSchedulePage } from './pages/admin-schedule.js';
 import { getSession, logout } from './lib/supabase.js';
 
 // App container
@@ -195,6 +196,15 @@ function initRouter() {
         loadAdminCss();
         renderAdminShell();
         await renderAdminAdsPage(contentEl);
+      },
+    },
+    {
+      path: '/admin/programacion',
+      guard: requireAuth,
+      render: async () => {
+        loadAdminCss();
+        renderAdminShell();
+        await renderAdminSchedulePage(contentEl);
       },
     },
   ]);

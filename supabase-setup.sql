@@ -133,3 +133,38 @@ CREATE POLICY "Authenticated users can manage ad_slots"
 -- 6. Focal Point for responsive image cropping
 ALTER TABLE articles ADD COLUMN IF NOT EXISTS image_focal_x real DEFAULT 0.5;
 ALTER TABLE articles ADD COLUMN IF NOT EXISTS image_focal_y real DEFAULT 0.5;
+
+-- 7. Radio Schedule / Programación
+CREATE TABLE IF NOT EXISTS schedule (
+  id uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  time_start text NOT NULL,
+  time_end text NOT NULL,
+  program_name text NOT NULL,
+  genre text DEFAULT '',
+  description text DEFAULT '',
+  sort_order integer DEFAULT 0,
+  created_at timestamptz DEFAULT now(),
+  updated_at timestamptz DEFAULT now()
+);
+
+-- Public read access
+ALTER TABLE schedule ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Public can read schedule" ON schedule FOR SELECT USING (true);
+CREATE POLICY "Authenticated users can manage schedule" ON schedule FOR ALL TO authenticated USING (true) WITH CHECK (true);
+
+-- Default schedule data
+INSERT INTO schedule (time_start, time_end, program_name, genre, description, sort_order) VALUES
+  ('00:00', '02:00', 'Trasnoche Nova', 'Musical Retro', 'Los grandes lentos y clásicos de todos los tiempos para acompañar la madrugada.', 1),
+  ('02:00', '05:30', 'Música Sin Pausa', 'Musical – Géneros Varios', 'Selección continua de música nacional e internacional para la madrugada.', 2),
+  ('05:30', '06:00', 'Santo Rosario', '', '', 3),
+  ('06:00', '07:00', 'Amanecer Chamamecero', 'Musical – Cultural', 'El primer sapucay del día. Chamamé, música del Litoral, efemérides, agenda cultural e información regional.', 4),
+  ('07:00', '07:30', 'Haciendo el Cruce', 'Educativo – Cultural', 'Conduce Rodrigo Ranzan Soares, profesor e historiador de frontera. Historia, identidad e integración entre Argentina y Brasil.', 5),
+  ('07:30', '08:30', 'Intermedio Musical', 'Musical de Integración Regional', 'Música argentina, brasileña y latinoamericana, promoviendo el intercambio cultural de la región.', 6),
+  ('08:30', '10:30', 'Abriendo Tranqueras', 'Magazine Musical – Cultural – Informativo', 'Conduce Elvio Héctor Vergara. Música regional, entrevistas, noticias culturales, agenda de eventos y participación de la audiencia.', 7),
+  ('10:30', '12:00', 'Media Mañana Nova', 'Musical', 'Música variada, información de servicio y acompañamiento para la media mañana.', 8),
+  ('12:00', '14:00', 'Siesta, Chicharra y Chamamé', 'Musical Regional', 'Conduce Aníbal Vera. Programa dedicado al chamamé y la música regional, en dúplex desde Mercedes, Corrientes.', 9),
+  ('14:00', '19:00', 'Modo Tarde', 'Musical – Entretenimiento', 'Música latina, argentina y brasileña, información artística, novedades y compañía para la tarde.', 10),
+  ('19:00', '19:30', 'Haciendo el Cruce (Repetición)', 'Educativo – Cultural', 'Reemisión del programa dedicado a la historia y la integración de la frontera.', 11),
+  ('19:30', '21:30', 'Nova Sin Fronteras', 'Musical – Cultural – Latinoamericano', 'Espacio dedicado a la música latina, argentina y brasileña, con información sobre artistas, entrevistas, novedades y agenda cultural.', 12),
+  ('21:30', '00:00', 'Expreso Nova', 'Musical Clásicos', 'Un recorrido por los grandes clásicos nacionales e internacionales para cerrar la jornada.', 13)
+ON CONFLICT DO NOTHING;

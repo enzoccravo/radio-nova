@@ -106,6 +106,9 @@ function renderDashboardContent(contentEl, articles, categories) {
       <div class="admin-header">
         <h1>Noticias</h1>
         <div style="display: flex; gap: var(--space-3);">
+          <a href="/admin/programacion" data-link class="btn btn-ghost">
+            📻 Programación
+          </a>
           <a href="/admin/anuncios" data-link class="btn btn-ghost">
             📢 Anuncios
           </a>

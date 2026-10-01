@@ -190,6 +190,51 @@ export async function updateAdSlot(id, updates) {
   return data;
 }
 
+// ---- Schedule ----
+
+/**
+ * Fetch radio schedule, ordered by sort_order.
+ */
+export async function fetchSchedule() {
+  const { data, error } = await supabase
+    .from('schedule')
+    .select('*')
+    .order('sort_order', { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+}
+
+export async function saveScheduleItem(item) {
+  if (item.id) {
+    const { data, error } = await supabase
+      .from('schedule')
+      .update({ ...item, updated_at: new Date().toISOString() })
+      .eq('id', item.id)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  } else {
+    const { id, ...rest } = item;
+    const { data, error } = await supabase
+      .from('schedule')
+      .insert(rest)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
+}
+
+export async function deleteScheduleItem(id) {
+  const { error } = await supabase
+    .from('schedule')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
+
 // ---- Utility ----
 
 /**
