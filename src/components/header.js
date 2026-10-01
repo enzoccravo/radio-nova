@@ -28,6 +28,7 @@ export function renderHeader() {
           <a href="/categoria/cultura" data-link class="nav-link" data-nav="cultura">Cultura</a>
           <a href="/categoria/policiales" data-link class="nav-link" data-nav="policiales">Policiales</a>
           <a href="/categoria/efemerides" data-link class="nav-link" data-nav="efemerides">Efemérides</a>
+          <a href="/categoria/sociales" data-link class="nav-link" data-nav="sociales">Sociales</a>
           <!-- <a href="/contacto" data-link class="nav-link" data-nav="contacto">Contacto</a> -->
         </nav>
 
@@ -47,6 +48,8 @@ export function renderHeader() {
       <a href="/categoria/economia" data-link class="nav-link" data-nav="economia">Economía</a>
       <a href="/categoria/cultura" data-link class="nav-link" data-nav="cultura">Cultura</a>
       <a href="/categoria/policiales" data-link class="nav-link" data-nav="policiales">Policiales</a>
+      <a href="/categoria/efemerides" data-link class="nav-link" data-nav="efemerides">Efemérides</a>
+      <a href="/categoria/sociales" data-link class="nav-link" data-nav="sociales">Sociales</a>
       <a href="/contacto" data-link class="nav-link" data-nav="contacto">Contacto</a>
     </nav>
   `;
