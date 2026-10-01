@@ -65,3 +65,33 @@ export function getResponsiveImageUrls(imageUrl, focalX = 0.5, focalY = 0.5) {
     mobile: getCroppedImageUrl(imageUrl, '4:3', 400, focalX, focalY),
   };
 }
+/**
+ * Upload an audio file (MP3) to Cloudinary.
+ * No compression needed — just upload as-is.
+ */
+export async function uploadAudioFile(file) {
+  const CLOUD_NAME = 'bzokhwff';
+  const UPLOAD_PRESET = 'noticias_radio';
+
+  try {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', UPLOAD_PRESET);
+    formData.append('resource_type', 'video'); // Cloudinary uses 'video' for audio too
+
+    const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/video/upload`, {
+      method: 'POST',
+      body: formData,
+    });
+
+    if (!response.ok) {
+      throw new Error('Error al subir audio a Cloudinary');
+    }
+
+    const data = await response.json();
+    return data.secure_url;
+  } catch (error) {
+    console.error('Error subiendo audio:', error);
+    throw error;
+  }
+}

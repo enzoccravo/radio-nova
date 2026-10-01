@@ -1,5 +1,5 @@
 import { adminFetchArticleById, saveArticle, fetchCategories, createCategory, generateSlug } from '../lib/supabase.js';
-import { uploadAndCompressImage } from '../lib/cloudinary.js';
+import { uploadAndCompressImage, uploadAudioFile } from '../lib/cloudinary.js';
 
 let quillInstance = null;
 
@@ -198,6 +198,22 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
             </div>
           </div>
 
+          <!-- Audio Panel -->
+          <div class="admin-editor-panel">
+            <h3>🎵 Audio de la nota</h3>
+            <div class="admin-field" style="margin-bottom: 0; display: flex; flex-direction: column; gap: var(--space-2);">
+              <div style="display: flex; gap: var(--space-2);">
+                <input type="text" id="editor-audio" placeholder="URL del audio (o subilo...)" value="${(article?.audio_url || '').replace(/"/g, '&quot;')}" style="flex: 1;" />
+                <button type="button" class="btn" id="btn-upload-audio" style="white-space: nowrap;">Subir MP3</button>
+                <input type="file" id="file-upload-audio" accept="audio/*" style="display: none;" />
+              </div>
+              <div id="audio-preview" style="margin-top: var(--space-2);">
+                ${article?.audio_url ? `<audio controls style="width: 100%;"><source src="${article.audio_url}" type="audio/mpeg" /></audio>` : '<span style="font-size: var(--text-sm); color: var(--color-text-muted);">Sin audio</span>'}
+              </div>
+              ${article?.audio_url ? `<button type="button" class="btn btn-ghost btn-sm" id="btn-remove-audio" style="align-self: flex-start;">Quitar audio</button>` : ''}
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -322,6 +338,56 @@ function renderEditorContent(contentEl, article, categories, isEdit) {
   // Initialize previews if editing an article with an existing image
   if (article?.image) {
     updateDevicePreviews();
+  }
+
+  // Audio Upload
+  const audioInput = document.getElementById('editor-audio');
+  const audioPreview = document.getElementById('audio-preview');
+  const btnUploadAudio = document.getElementById('btn-upload-audio');
+  const fileUploadAudio = document.getElementById('file-upload-audio');
+  const btnRemoveAudio = document.getElementById('btn-remove-audio');
+
+  const updateAudioPreview = () => {
+    const url = audioInput.value.trim();
+    if (url) {
+      audioPreview.innerHTML = `<audio controls style="width: 100%;"><source src="${url}" type="audio/mpeg" /></audio>`;
+    } else {
+      audioPreview.innerHTML = '<span style="font-size: var(--text-sm); color: var(--color-text-muted);">Sin audio</span>';
+    }
+  };
+
+  audioInput.addEventListener('input', updateAudioPreview);
+
+  btnUploadAudio.addEventListener('click', () => {
+    fileUploadAudio.click();
+  });
+
+  fileUploadAudio.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    btnUploadAudio.classList.add('btn-loading');
+    btnUploadAudio.textContent = 'Subiendo...';
+    try {
+      const audioUrl = await uploadAudioFile(file);
+      audioInput.value = audioUrl;
+      updateAudioPreview();
+      showToast('Audio subido con éxito');
+    } catch (err) {
+      showToast('Error subiendo audio: ' + err.message, 'error');
+    } finally {
+      btnUploadAudio.classList.remove('btn-loading');
+      btnUploadAudio.textContent = 'Subir MP3';
+      fileUploadAudio.value = '';
+    }
+  });
+
+  if (btnRemoveAudio) {
+    btnRemoveAudio.addEventListener('click', () => {
+      audioInput.value = '';
+      updateAudioPreview();
+      btnRemoveAudio.remove();
+    });
   }
 
   // Category combobox
@@ -473,6 +539,7 @@ async function handleSave(publish, existingArticle, isEdit) {
   const image = document.getElementById('editor-image').value.trim();
   const imageFocalX = parseFloat(document.getElementById('editor-focal-x')?.value) || 0.5;
   const imageFocalY = parseFloat(document.getElementById('editor-focal-y')?.value) || 0.5;
+  const audioUrl = document.getElementById('editor-audio').value.trim();
   let excerpt = document.getElementById('editor-excerpt').value.trim();
   const body = quillInstance ? quillInstance.root.innerHTML : '';
 
@@ -505,6 +572,7 @@ async function handleSave(publish, existingArticle, isEdit) {
     image,
     image_focal_x: imageFocalX,
     image_focal_y: imageFocalY,
+    audio_url: audioUrl,
     category: categorySlug,
     author: author || 'Redacción Radio Nova',
     published: publish,

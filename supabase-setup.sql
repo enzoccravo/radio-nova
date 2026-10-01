@@ -168,3 +168,6 @@ INSERT INTO schedule (time_start, time_end, program_name, genre, description, so
   ('19:30', '21:30', 'Nova Sin Fronteras', 'Musical – Cultural – Latinoamericano', 'Espacio dedicado a la música latina, argentina y brasileña, con información sobre artistas, entrevistas, novedades y agenda cultural.', 12),
   ('21:30', '00:00', 'Expreso Nova', 'Musical Clásicos', 'Un recorrido por los grandes clásicos nacionales e internacionales para cerrar la jornada.', 13)
 ON CONFLICT DO NOTHING;
+
+-- 8. Audio field for articles
+ALTER TABLE articles ADD COLUMN IF NOT EXISTS audio_url text DEFAULT '';
