@@ -132,6 +132,8 @@ body {
   line-height: var(--leading-relaxed);
   color: var(--color-text);
   background-color: var(--color-bg);
+  overflow-wrap: break-word;
+  word-break: break-word;
   min-height: 100vh;
   overflow-x: hidden;
 }
