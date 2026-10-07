@@ -77,6 +77,24 @@ export async function renderSidebar() {
         </div>
       ` : ''}
 
+      <!-- Mini Banners -->
+      <div class="sidebar-mini-banners" style="display: flex; flex-direction: column; gap: var(--space-2);">
+        <a href="https://www.instagram.com/haciendoelcruce" target="_blank" rel="noopener noreferrer" class="mini-banner cruce-banner">
+          <div class="story-avatar story-ig">
+            <img src="/haciendoelcruce.jpg" alt="Haciendo el Cruce" />
+          </div>
+          <span style="flex: 1; text-align: left;">Haciendo el Cruce</span>
+          <span style="width: 16px; height: 16px; display: inline-flex; align-items: center; fill: currentColor; opacity: 0.8;">${icons.instagram}</span>
+        </a>
+        <a href="https://www.facebook.com/Yayetopa" target="_blank" rel="noopener noreferrer" class="mini-banner yayetopa-banner">
+          <div class="story-avatar story-fb">
+            <img src="/yayetopa.jpg" alt="Yayetopa" />
+          </div>
+          <span style="flex: 1; text-align: left;">Fundación Yayetopa</span>
+          <span style="width: 16px; height: 16px; display: inline-flex; align-items: center; fill: currentColor; opacity: 0.8;">${icons.facebook}</span>
+        </a>
+      </div>
+
       <!-- Full Schedule -->
       <div class="sidebar-widget" id="schedule-widget">
         <div class="widget-header">
