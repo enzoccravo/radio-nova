@@ -93,9 +93,9 @@ export async function renderSidebar() {
           <span style="flex: 1; text-align: left;">Fundación Yayetopa</span>
           <span style="width: 16px; height: 16px; display: inline-flex; align-items: center; fill: currentColor; opacity: 0.8;">${icons.facebook}</span>
         </a>
-         <a href="https://www.instagram.com/haciendoelcruce" target="_blank" rel="noopener noreferrer" class="mini-banner cruce-banner">
+         <a href="https://www.instagram.com/abriendotranqueras103.3" target="_blank" rel="noopener noreferrer" class="mini-banner cruce-banner">
           <div class="story-avatar story-ig">
-            <img src="/abriendotranqueras.jpg.jpg" alt="Abriendo Tranqueras" />
+            <img src="/abriendotranqueras.jpg" alt="Abriendo Tranqueras" />
           </div>
           <span style="flex: 1; text-align: left;">Abriendo Tranqueras</span>
           <span style="width: 16px; height: 16px; display: inline-flex; align-items: center; fill: currentColor; opacity: 0.8;">${icons.instagram}</span>
