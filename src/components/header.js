@@ -15,6 +15,10 @@ export function renderHeader() {
           <a href="https://www.facebook.com/Yayetopa" target="_blank" rel="noopener noreferrer" class="top-bar-link">
             ${icons.facebook} <span class="tb-hide">Conocé a </span>Yayetopa<span class="tb-hide"> en Facebook</span>
           </a>
+          <span class="top-bar-divider">|</span>
+          <a href="https://www.instagram.com/abriendotranqueras103.3" target="_blank" rel="noopener noreferrer" class="top-bar-link">
+            ${icons.instagram} <span class="tb-hide">Seguí a </span>Abriendo Tranqueras<span class="tb-hide"> en Instagram</span>
+          </a>
         </div>
       </div>
       <div class="container header-inner">
