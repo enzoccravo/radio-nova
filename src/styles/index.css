@@ -133,7 +133,7 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   overflow-wrap: break-word;
-  word-break: break-word;
+  word-break: normal;
   min-height: 100vh;
   overflow-x: hidden;
 }
@@ -148,6 +148,8 @@ h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
   line-height: var(--leading-tight);
   color: var(--color-text);
+  overflow-wrap: break-word;
+  word-break: normal;
 }
 
 a {

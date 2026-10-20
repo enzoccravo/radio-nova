@@ -532,16 +532,25 @@ function initCategoryCombobox(categories) {
  * Handle save (publish or draft)
  */
 async function handleSave(publish, existingArticle, isEdit) {
-  const title = document.getElementById('editor-title').value.trim();
-  const subtitle = document.getElementById('editor-subtitle').value.trim();
+  const cleanField = (s) => (s || '')
+    .replace(/[\u00A0\u200B\u202F\uFEFF\u200E\u200F]/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .trim();
+
+  const title = cleanField(document.getElementById('editor-title').value);
+  const subtitle = cleanField(document.getElementById('editor-subtitle').value);
   const categorySlug = document.getElementById('category-slug').value;
-  const author = document.getElementById('editor-author').value.trim();
+  const author = cleanField(document.getElementById('editor-author').value);
   const image = document.getElementById('editor-image').value.trim();
   const imageFocalX = parseFloat(document.getElementById('editor-focal-x')?.value) || 0.5;
   const imageFocalY = parseFloat(document.getElementById('editor-focal-y')?.value) || 0.5;
   const audioUrl = document.getElementById('editor-audio').value.trim();
-  let excerpt = document.getElementById('editor-excerpt').value.trim();
-  const body = quillInstance ? quillInstance.root.innerHTML : '';
+  let excerpt = cleanField(document.getElementById('editor-excerpt').value);
+  const rawBody = quillInstance ? quillInstance.root.innerHTML : '';
+  const body = rawBody
+    .replace(/[\u00A0\u200B\u202F\uFEFF\u200E\u200F]/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/<p>\s*<\/p>/g, '<p><br></p>');
 
   // Validations
   if (!title) {

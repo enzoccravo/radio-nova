@@ -26,6 +26,28 @@ export async function getSession() {
 // ---- Articles ----
 
 /**
+ * Clean non-breaking and invisible whitespace characters so text wraps cleanly on word boundaries.
+ */
+export function cleanSpaces(str) {
+  if (typeof str !== 'string') return str;
+  return str
+    .replace(/[\u00A0\u200B\u202F\uFEFF\u200E\u200F]/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/<p>\s*<\/p>/g, '<p><br></p>');
+}
+
+export function cleanArticleSpaces(article) {
+  if (!article) return article;
+  return {
+    ...article,
+    title: cleanSpaces(article.title),
+    subtitle: cleanSpaces(article.subtitle),
+    excerpt: cleanSpaces(article.excerpt),
+    body: cleanSpaces(article.body),
+  };
+}
+
+/**
  * Fetch published articles, newest first.
  * @param {object} opts - { limit, offset, category, featured }
  */
@@ -43,7 +65,7 @@ export async function fetchArticles(opts = {}) {
 
   const { data, error } = await query;
   if (error) throw error;
-  return data || [];
+  return (data || []).map(cleanArticleSpaces);
 }
 
 /**
@@ -58,7 +80,7 @@ export async function fetchArticleBySlug(slug) {
     .single();
 
   if (error && error.code !== 'PGRST116') throw error; // PGRST116 = no rows
-  return data || null;
+  return data ? cleanArticleSpaces(data) : null;
 }
 
 // ---- Admin: Articles (all, including drafts) ----
@@ -70,7 +92,7 @@ export async function adminFetchArticles() {
     .order('created_at', { ascending: false });
 
   if (error) throw error;
-  return data || [];
+  return (data || []).map(cleanArticleSpaces);
 }
 
 export async function adminFetchArticleById(id) {
@@ -81,30 +103,31 @@ export async function adminFetchArticleById(id) {
     .single();
 
   if (error) throw error;
-  return data;
+  return data ? cleanArticleSpaces(data) : null;
 }
 
 export async function saveArticle(article) {
-  if (article.id) {
+  const cleanItem = cleanArticleSpaces(article);
+  if (cleanItem.id) {
     // Update existing
     const { data, error } = await supabase
       .from('articles')
-      .update(article)
-      .eq('id', article.id)
+      .update(cleanItem)
+      .eq('id', cleanItem.id)
       .select()
       .single();
     if (error) throw error;
-    return data;
+    return cleanArticleSpaces(data);
   } else {
     // Insert new
-    const { id, ...rest } = article; // remove undefined id
+    const { id, ...rest } = cleanItem; // remove undefined id
     const { data, error } = await supabase
       .from('articles')
       .insert(rest)
       .select()
       .single();
     if (error) throw error;
-    return data;
+    return cleanArticleSpaces(data);
   }
 }
 
@@ -241,7 +264,7 @@ export async function deleteScheduleItem(id) {
  * Generate a URL-friendly slug from a title.
  */
 export function generateSlug(title) {
-  return title
+  return cleanSpaces(title || '')
     .toLowerCase()
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '') // remove accents
